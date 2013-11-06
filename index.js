@@ -21,7 +21,6 @@ function create(method) {
     return function(next){
       return function *(){
         var m = re.exec(this.path);
-        console.log(this.path);
         
         if (m) {
           var args = m.slice(1);
