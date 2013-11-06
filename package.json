@@ -1,0 +1,25 @@
+{
+  "name": "koa-route",
+  "description": "Koa route middleware",
+  "repository": "koajs/route",
+  "version": "1.0.0",
+  "keywords": [
+    "koa",
+    "middleware",
+    "routes",
+    "router",
+    "route"
+  ],
+  "files": [
+    "index.js"
+  ],
+  "devDependencies": {
+    "koa": "0.0.1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "path-to-regexp": "0.0.2",
+    "methods": "0.1.0",
+    "debug": "*"
+  }
+}
