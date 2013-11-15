@@ -19,9 +19,14 @@ function create(method) {
     debug('%s %s -> %s', method, path, re);
 
     return function *(next){
-      var m = re.exec(this.path);
-      
-      if (m) {
+      var m;
+
+      if (method != this.method) {
+        yield next;
+        return;
+      }
+
+      if (m = re.exec(this.path)) {
         var args = m.slice(1);
         debug('%s %s matches %s %j', this.method, path, this.path, args);
         yield fn.apply(this, args);
