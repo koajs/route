@@ -21,17 +21,18 @@ function create(method) {
     return function *(next){
       var m;
 
-      if (method != this.method) {
-        yield next;
-        return;
-      }
+      // method
+      if (method != this.method) return yield next;
 
+      // path
       if (m = re.exec(this.path)) {
         var args = m.slice(1);
         debug('%s %s matches %s %j', this.method, path, this.path, args);
         yield fn.apply(this, args);
+        return;
       }
 
+      // miss
       yield next;
     }
   }
