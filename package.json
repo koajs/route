@@ -14,12 +14,18 @@
     "index.js"
   ],
   "devDependencies": {
-    "koa": "0.0.2"
+    "mocha": "*",
+    "supertest": "*",
+    "should": "*",
+    "koa": "koajs/koa"
   },
   "license": "MIT",
   "dependencies": {
     "path-to-regexp": "0.0.2",
     "methods": "0.1.0",
     "debug": "*"
+  },
+  "scripts": {
+    "test": "make test"
   }
 }

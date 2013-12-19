@@ -11,8 +11,11 @@ methods.forEach(function(method){
   exports[method] = create(method);
 });
 
+exports.del = exports.delete;
+exports.all = create();
+
 function create(method) {
-  method = method.toUpperCase();
+  if (method) method = method.toUpperCase();
 
   return function(path, fn){
     var re = pathToRegexp(path);
@@ -22,7 +25,7 @@ function create(method) {
       var m;
 
       // method
-      if (method != this.method) return yield next;
+      if (method && method != this.method) return yield next;
 
       // path
       if (m = re.exec(this.path)) {
