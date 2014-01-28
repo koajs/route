@@ -1,4 +1,3 @@
-
 # koa-route
 
  Uber simple route middleware for koa.
@@ -8,6 +7,9 @@ var _ = require('koa-route');
 app.use(_.get('/pets', pets.list));
 app.use(_.get('/pets/:name', pets.show));
 ```
+
+ If you need a full-featured solution check out [koa-router](https://github.com/alexmingoia/koa-router),
+ a Koa clone of express-resource.
 
 ## Installation
 
