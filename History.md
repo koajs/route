@@ -1,4 +1,10 @@
 
+TBD
+==================
+
+ * add 'next' param to path params list as the last param
+ * add route.all() handler
+
 1.0.2 / 2013-11-27
 ==================
 
