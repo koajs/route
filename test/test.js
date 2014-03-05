@@ -1,5 +1,7 @@
+
 var request = require('supertest');
 var koa = require('koa');
+
 var methods = require('methods').map(function(method){
   // normalize method names for tests
   if (method == 'delete') method = 'del';
@@ -82,19 +84,21 @@ describe('Koa Route', function(){
         app.use(route[method]('/:user(tj)', function*(user, next){
           yield next;
         }))
+
         app.use(route[method]('/:user(tj)', function*(user, next){
           this.body = user;
           yield next;
         }))
+
         app.use(route[method]('/:user(tj)', function*(user, next){
           this.status = 201;
         }))
 
         it(method, function(done){
           request(app.listen())
-              [method]('/tj')
-              .expect(201)
-              .expect(method === 'head' ? '' : 'tj', done);
+            [method]('/tj')
+            .expect(201)
+            .expect(method === 'head' ? '' : 'tj', done);
         })
       })
     })
