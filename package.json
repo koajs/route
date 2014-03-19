@@ -21,8 +21,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "path-to-regexp": "0.0.2",
-    "methods": "0.1.0",
+    "path-to-regexp": "~0.1.2",
+    "methods": "~0.1.0",
     "debug": "*"
   },
   "scripts": {
