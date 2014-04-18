@@ -2,7 +2,7 @@
   "name": "koa-route",
   "description": "Koa route middleware",
   "repository": "koajs/route",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "keywords": [
     "koa",
     "middleware",
