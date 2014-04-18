@@ -100,4 +100,17 @@ describe('route params', function(){
         .expect(method === 'head' ? '' : 'tj', done);
     })
   })
+
+  it('should be decoded', function(done){
+    var app = koa();
+
+    app.use(route.get('/package/:name', function *(name){
+      name.should.equal('http://github.com/component/tip');
+      done();
+    }));
+
+    request(app.listen())
+    .get('/package/' + encodeURIComponent('http://github.com/component/tip'))
+    .end(function(){});
+  })
 })
