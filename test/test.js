@@ -77,28 +77,27 @@ describe('route.all()', function(){
 })
 
 describe('route params', function(){
-  describe('should include "next" param with', function(){
-    methods.forEach(function(method){
-      var app = koa();
-      app.use(route[method]('/:user(tj)', function*(user, next){
-        yield next;
-      }))
+  methods.forEach(function(method){
+    var app = koa();
 
-      app.use(route[method]('/:user(tj)', function*(user, next){
-        this.body = user;
-        yield next;
-      }))
+    app.use(route[method]('/:user(tj)', function*(user, next){
+      yield next;
+    }))
 
-      app.use(route[method]('/:user(tj)', function*(user, next){
-        this.status = 201;
-      }))
+    app.use(route[method]('/:user(tj)', function*(user, next){
+      this.body = user;
+      yield next;
+    }))
 
-      it(method, function(done){
-        request(app.listen())
-          [method]('/tj')
-          .expect(201)
-          .expect(method === 'head' ? '' : 'tj', done);
-      })
+    app.use(route[method]('/:user(tj)', function*(user, next){
+      this.status = 201;
+    }))
+
+    it('should work with method ' + method, function(done){
+      request(app.listen())
+        [method]('/tj')
+        .expect(201)
+        .expect(method === 'head' ? '' : 'tj', done);
     })
   })
 })
