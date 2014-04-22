@@ -114,3 +114,60 @@ describe('route params', function(){
     .end(function(){});
   })
 })
+
+describe('multiple route fns', function () {
+  it('should handle more than one fn', function (done) {
+    var app = koa();
+
+    function* intermediateFn (name) {
+      name.should.equal('hallas');
+    }
+
+    app.use(route.get('/users/:name', intermediateFn, function* (name) {
+      name.should.equal('hallas');
+      done();
+    }));
+
+    request(app.listen())
+      .get('/users/hallas')
+      .end(function() {});
+  });
+
+  it('should throw in intermediate', function (done) {
+    var app = koa();
+
+    function* intermediateFn (name) {
+      try {
+        this.throw('intermediate error');
+      } catch (err) {
+        err.should.be.an.Error;
+      }
+    }
+
+    app.use(route.get('/users/:name', intermediateFn, function* (name) {
+      name.should.equal('hallas');
+      done();
+    }));
+
+    request(app.listen())
+      .get('/users/hallas')
+      .end(function() {});
+  });
+
+  it('should pass ctx along', function (done) {
+    var app = koa();
+
+    function* intermediateFn (firstName, lastName) {
+      this.fullName = firstName + ' ' + lastName;
+    }
+
+    app.use(route.get('/users/:first/:last', intermediateFn, function* (first, last) {
+      this.fullName.should.equal(first + ' ' + last);
+      done();
+    }));
+
+    request(app.listen())
+      .get('/users/chris/hallas')
+      .end(function() {});
+  });
+});
