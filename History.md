@@ -1,21 +1,18 @@
+## History
 
-1.1.2 / 2014-04-18
-==================
+### 1.1.2 / 2014-04-18
 
- * fix: add param decoding
+* fix add param decoding
 
-1.1.0 / 2014-03-05
-==================
+### 1.1.0 / 2014-03-05
 
- * add 'next' param to path params list as the last param
- * add route.all() handler
+* add 'next' param to path params list as the last param
+* add route.all() handler
 
-1.0.2 / 2013-11-27
-==================
+### 1.0.2 / 2013-11-27
 
- * fix fallthrough bug
+* fix fallthrough bug
 
-1.0.1 / 2013-11-15
-==================
+### 1.0.1 / 2013-11-15
 
- * fix: check if .method matches
+* fix: check if .method matches
