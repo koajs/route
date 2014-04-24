@@ -17,7 +17,7 @@
     "mocha": "*",
     "supertest": "*",
     "should": "*",
-    "koa": "koajs/koa"
+    "koa": "*"
   },
   "license": "MIT",
   "dependencies": {

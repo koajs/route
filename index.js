@@ -4,6 +4,7 @@
 
 var pathToRegexp = require('path-to-regexp');
 var methods = require('methods');
+var assert = require('assert');
 var debug = require('debug')('koa-route');
 
 
@@ -23,6 +24,7 @@ exports.all = create();
 
 /**
  * @param {String} method
+ * @return {GeneratorFunction}
  * @api private
  */
 
@@ -30,7 +32,13 @@ function create (method) {
   // uppercase... because just in-case
   if (method) method = method.toUpperCase();
 
-  return function (path, fn) {
+  return function (path) {
+    // we allow for multiple handlers on a route
+    var fns = Array.prototype.slice.call(arguments, 1);
+    // but we need atleast one
+    var fn = fns.pop();
+    assert(fn, 'route must have atleast one handler');
+
     var re = pathToRegexp(path);
     debug('%s %s -> %s', method, path, re);
 
@@ -48,9 +56,24 @@ function create (method) {
       var args = match.slice(1).map(decodeURIComponent);
       debug('%s %s matches %s %j', this.method, path, this.path, args);
 
+      // run the preceding handlers, notice, they do not receive the next
+      // generator
+      yield fns.map(apply(this, args));
+
       // pass along the next generator
       args.push(next);
       yield fn.apply(this, args);
     }
   }
+}
+
+/**
+ * @param {Object} ctx
+ * @param {Array} args
+ */
+
+function apply (ctx, args) {
+  return function (fn) {
+    return fn.apply(ctx, args);
+  };
 }
