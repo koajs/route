@@ -173,3 +173,122 @@ describe('multiple route fns', function () {
       .end(function() {});
   });
 });
+
+describe('paramify', function () {
+  var param = route.param;
+  var get = route.get;
+
+  var app = koa();
+
+  param('user', function* (id) {
+    if (id == '1') {
+      this.user = { name: 'one' };
+    } else {
+      this.status = 404;
+    }
+  });
+
+  param('user', function* (id) {
+    this.pre = 'lol: ';
+  });
+
+  app.use(get('/:user', function* () {
+    this.body = this.pre + this.user.name;
+  }));
+
+  it('should work without params', function (done) {
+    var app = koa();
+
+    app.use(route.get('/', function* (user) {
+      this.body = 'home';
+    }));
+
+    request(app.listen())
+      .get('/')
+      .expect('home', done);
+  });
+
+  it('should work without param fns', function (done) {
+    var app = koa();
+
+    app.use(route.get('/:user', function* (user) {
+      this.body = user;
+    }));
+
+    request(app.listen())
+      .get('/julian')
+      .expect('julian', done);
+  });
+
+  it('should work with param fns', function (done) {
+    var app = koa();
+
+    route.param('user', function* (id) {
+      this.user = 'julian';
+    });
+
+    app.use(route.get('/:user', function* () {
+      this.body = this.user;
+    }));
+
+    request(app.listen())
+      .get('/julian')
+      .expect('julian', done);
+  });
+
+  it('should work with multiple params', function (done) {
+    var app = koa();
+
+    route.param('user', function* (id) {
+      this.user = 'julian';
+    });
+
+    route.param('repo', function* (id) {
+      this.repo = 'repo';
+    });
+
+    app.use(route.get('/:user/:repo', function* () {
+      this.body = this.user + ': ' + this.repo;
+    }));
+
+    request(app.listen())
+      .get('/julian/repo')
+      .expect('julian: repo', done);
+  });
+
+  it('should abort inside param fns', function (done) {
+    var app = koa();
+
+    route.param('user', function* (id) {
+      this.status = 404;
+    });
+
+    app.use(route.get('/:user', function* () {
+      this.body = this.user;
+    }));
+
+    request(app.listen())
+      .get('/julian')
+      .expect(404, done);
+  });
+
+  it('should accept middleware', function (done) {
+    var app = koa();
+
+    route.param('user', function* (id) {
+      this.user = 'julian';
+    });
+
+    route.param('user', function* () {
+      this.user = this.user.toUpperCase();
+    });
+
+    app.use(route.get('/:user', function* () {
+      this.body = this.user;
+    }));
+
+    request(app.listen())
+      .get('/julian')
+      .expect('JULIAN', done);
+  });
+});
