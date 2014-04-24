@@ -1,28 +1,35 @@
 # koa-route
 
- Uber simple route middleware for koa.
+Uber simple route middleware for Koa.
 
-```
-var _ = require('koa-route');
-app.use(_.get('/pets', pets.list));
-app.use(_.get('/pets/:name', pets.show));
+```js
+var route = require('koa-route');
+app.use(route.get('/pets', pets.list));
+app.use(route.get('/pets/:name', pets.show));
 ```
 
- If you need a full-featured solution check out [koa-router](https://github.com/alexmingoia/koa-router),
- a Koa clone of express-resource.
+If you need a full-featured solution check out
+[koa-router](https://github.com/alexmingoia/koa-router), a Koa clone of
+express-resource.
 
 ## Installation
 
-```js
+```
 $ npm install koa-route
+```
+
+## Test
+
+```
+$ make test
 ```
 
 ## Example
 
-  Contrived resource-oriented example:
+Contrived resource-oriented example.
 
 ```js
-var _ = require('koa-route');
+var route = require('koa-route');
 var koa = require('koa');
 var app = koa();
 
@@ -45,8 +52,8 @@ var pets = {
   }
 };
 
-app.use(_.get('/pets', pets.list));
-app.use(_.get('/pets/:name', pets.show));
+app.use(route.get('/pets', pets.list));
+app.use(route.get('/pets/:name', pets.show));
 
 app.listen(3000);
 console.log('listening on port 3000');
@@ -54,4 +61,4 @@ console.log('listening on port 3000');
 
 ## License
 
-  MIT
+MIT
