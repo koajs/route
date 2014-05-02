@@ -29,7 +29,9 @@ function create(method) {
 
       // path
       if (m = re.exec(this.path)) {
-        var args = m.slice(1).map(decodeURIComponent);
+        var args = m.slice(1).map(function (item) {
+          return (item ? decodeURIComponent(item) : null)
+        });
         debug('%s %s matches %s %j', this.method, path, this.path, args);
         args.push(next);
         yield fn.apply(this, args);
