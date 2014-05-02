@@ -113,4 +113,18 @@ describe('route params', function(){
     .get('/package/' + encodeURIComponent('http://github.com/component/tip'))
     .end(function(){});
   })
+
+  it('should be null if not matched', function(done){
+    var app = koa();
+
+    app.use(route.get('/api/:resource/:id?', function *(resource, id){
+      resource.should.equal('users');
+      (id == null).should.be.true;
+      done();
+    }));
+
+    request(app.listen())
+    .get('/api/users')
+    .end(function(){});
+  })
 })
