@@ -29,9 +29,7 @@ function create(method) {
 
       // path
       if (m = re.exec(this.path)) {
-        var args = m.slice(1).map(function (item) {
-          return (item ? decodeURIComponent(item) : null)
-        });
+        var args = m.slice(1).map(decode);
         debug('%s %s matches %s %j', this.method, path, this.path, args);
         args.push(next);
         yield fn.apply(this, args);
@@ -42,4 +40,12 @@ function create(method) {
       yield next;
     }
   }
+}
+
+/**
+ * Decode value.
+ */
+
+function decode(val) {
+  if (val) return decodeURIComponent(val);
 }
