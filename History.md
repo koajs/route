@@ -1,4 +1,9 @@
 
+1.1.4 / 2014-05-02
+==================
+
+ * fix: make null the unmatched optional parameter
+
 1.1.2 / 2014-04-18
 ==================
 
