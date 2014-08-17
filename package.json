@@ -17,12 +17,12 @@
     "mocha": "*",
     "supertest": "*",
     "should": "*",
-    "koa": "koajs/koa"
+    "koa": "*"
   },
   "license": "MIT",
   "dependencies": {
-    "path-to-regexp": "~0.2.4",
-    "methods": "~0.1.0",
+    "path-to-regexp": "~1.0.0",
+    "methods": "~1.1.0",
     "debug": "*"
   },
   "scripts": {
