@@ -40,7 +40,7 @@ var pets = {
 
   show: function *(name){
     var pet = db[name];
-    if (!pet) return this.error('cannot find that pet', 404);
+    if (!pet) return this.throw('cannot find that pet', 404);
     this.body = pet.name + ' is a ' + pet.species;
   }
 };
