@@ -101,6 +101,18 @@ describe('route params', function(){
     })
   })
 
+  it('should work with method head when get is defined', function(done){
+    var app = koa();
+
+    app.use(route.get('/tj', function *(name){
+      this.body = 'foo';
+    }));
+
+    request(app.listen())
+    ['head']('/tj')
+    .expect(200, done)
+  })
+
   it('should be decoded', function(done){
     var app = koa();
 
