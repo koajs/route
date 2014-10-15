@@ -1,4 +1,3 @@
-
 var request = require('supertest');
 var koa = require('koa');
 
@@ -126,5 +125,19 @@ describe('route params', function(){
     request(app.listen())
     .get('/api/users')
     .end(function(){});
+  })
+
+  it('should use the given options', function(done){
+    var app = koa();
+
+    app.use(route.get('/api/:resource/:id', function *(resource, id){
+      resource.should.equal('users');
+      id.should.equal('1')
+      done();
+    }, { end: false }));
+
+    request(app.listen())
+      .get('/api/users/1/posts')
+      .end(function(){});
   })
 })

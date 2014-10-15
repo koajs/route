@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -17,8 +16,8 @@ exports.all = create();
 function create(method) {
   if (method) method = method.toUpperCase();
 
-  return function(path, fn){
-    var re = pathToRegexp(path);
+  return function(path, fn, opts){
+    var re = pathToRegexp(path, opts);
     debug('%s %s -> %s', method, path, re);
 
     return function *(next){
