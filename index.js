@@ -31,6 +31,13 @@ function create(method) {
         var args = m.slice(1).map(decode);
         debug('%s %s matches %s %j', this.method, path, this.path, args);
         args.push(next);
+        if(Array.isArray(fn)){
+          for(var i=0; i < fn.length; i++){
+            yield fn[i].apply(this, args);
+          }
+        }else{
+          yield fn.apply(this, args);
+        }
         yield fn.apply(this, args);
         return;
       }
