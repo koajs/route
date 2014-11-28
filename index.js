@@ -24,7 +24,7 @@ function create(method) {
       var m;
 
       // method
-      if (validMethods(this.method).indexOf(method) == -1) return yield next;
+      if (!matches(this, method)) return yield* next;
 
       // path
       if (m = re.exec(this.path)) {
@@ -53,8 +53,9 @@ function decode(val) {
  * Check request method.
  */
 
-function validMethods(method) {
-  var arr = [undefined, method];
-  if (method == 'HEAD') arr.push('GET');
-  return arr;
+function matches(ctx, method) {
+  if (!method) return true;
+  if (ctx.method === method) return true;
+  if (method === 'GET' && ctx.method === 'HEAD') return true;
+  return false;
 }
