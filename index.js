@@ -31,12 +31,12 @@ function create(method) {
         var args = m.slice(1).map(decode);
         debug('%s %s matches %s %j', this.method, path, this.path, args);
         args.push(next);
-        yield fn.apply(this, args);
+        yield* fn.apply(this, args);
         return;
       }
 
       // miss
-      yield next;
+      yield* next;
     }
   }
 }
