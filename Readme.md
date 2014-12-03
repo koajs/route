@@ -2,7 +2,7 @@
 
  Uber simple route middleware for koa.
 
-```
+```js
 var _ = require('koa-route');
 app.use(_.get('/pets', pets.list));
 app.use(_.get('/pets/:name', pets.show));
