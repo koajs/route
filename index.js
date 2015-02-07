@@ -36,7 +36,7 @@ function create(method) {
       }
 
       // miss
-      yield* next;
+      return yield* next;
     }
   }
 }
