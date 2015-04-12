@@ -1,4 +1,10 @@
 
+2.4.1 / 2015-04-12
+===================
+
+  * add ALL method to debug
+  * add return statement in case of path miss
+
 2.4.0 / 2014-11-27
 ==================
 
