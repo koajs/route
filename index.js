@@ -18,7 +18,7 @@ function create(method) {
 
   return function(path, fn, opts){
     var re = pathToRegexp(path, opts);
-    debug('%s %s -> %s', method, path, re);
+    debug('%s %s -> %s', method || 'ALL', path, re);
 
     return function *(next){
       var m;
