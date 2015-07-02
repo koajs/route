@@ -22,9 +22,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "path-to-regexp": "~1.0.0",
+    "debug": "*",
     "methods": "~1.1.0",
-    "debug": "*"
+    "path-to-regexp": "^1.2.0"
   },
   "scripts": {
     "test": "NODE_ENV=test mocha --harmony-generators --require should --reporter spec",
