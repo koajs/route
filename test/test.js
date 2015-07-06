@@ -8,15 +8,50 @@ var methods = require('methods').map(function(method){
   return method;
 }).filter(Boolean)
 
+var prefix = '/prefix';
 var route = require('..');
-var prefixed = route('/prefix');
+var prefixed = route(prefix);
 
 describe('when simply required', function() {
   setupSuite(route, '');
 });
 
 describe('when prefixed', function() {
-  setupSuite(prefixed, '/prefix');
+  setupSuite(prefixed, prefix);
+
+  methods.forEach(function(method){
+    var app = koa();
+    app.use(prefixed[method](function*(){
+      this.body = 'tj';
+    }))
+
+    describe('route.' + method + '()', function(){
+      describe('when method and path match', function(){
+        it('should 200', function(done){
+          request(app.listen())
+          [method](prefix)
+          .expect(200)
+          .expect(method === 'head' ? '' : 'tj', done);
+        })
+      })
+
+      describe('when only method matches', function(){
+        it('should 404', function(done){
+          request(app.listen())
+          [method](prefix + '/tjayyyy')
+          .expect(404, done);
+        })
+      })
+
+      describe('when only path matches', function(){
+        it('should 404', function(done){
+          request(app.listen())
+          [method === 'get' ? 'post' : 'get'](prefix)
+          .expect(404, done);
+        })
+      })
+    })
+  })
 });
 
 function setupSuite(route, prefix) {
