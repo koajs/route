@@ -8,148 +8,194 @@ var methods = require('methods').map(function(method){
   return method;
 }).filter(Boolean)
 
+var prefix = '/prefix';
 var route = require('..');
+var prefixed = route(prefix);
 
-methods.forEach(function(method){
-  var app = koa();
-  app.use(route[method]('/:user(tj)', function*(user){
-    this.body = user;
-  }))
+describe('when simply required', function() {
+  setupSuite(route, '');
+});
 
-  describe('route.' + method + '()', function(){
-    describe('when method and path match', function(){
-      it('should 200', function(done){
-        request(app.listen())
-        [method]('/tj')
-        .expect(200)
-        .expect(method === 'head' ? '' : 'tj', done);
-      })
-    })
+describe('when prefixed', function() {
+  setupSuite(prefixed, prefix);
 
-    describe('when only method matches', function(){
-      it('should 404', function(done){
-        request(app.listen())
-        [method]('/tjayyyy')
-        .expect(404, done);
-      })
-    })
-
-    describe('when only path matches', function(){
-      it('should 404', function(done){
-        request(app.listen())
-        [method === 'get' ? 'post' : 'get']('/tj')
-        .expect(404, done);
-      })
-    })
-  })
-})
-
-describe('route.all()', function(){
-  describe('should work with', function(){
-    methods.forEach(function(method){
-      var app = koa();
-      app.use(route.all('/:user(tj)', function*(user){
-        this.body = user;
-      }))
-
-      it(method, function(done){
-        request(app.listen())
-        [method]('/tj')
-        .expect(200)
-        .expect(method === 'head' ? '' : 'tj', done);
-      })
-    })
-  })
-
-  describe('when patch does not match', function(){
-    it('should 404', function (done){
-      var app = koa();
-      app.use(route.all('/:user(tj)', function*(user){
-        this.body = user;
-      }))
-
-      request(app.listen())
-      .get('/tjayyyyyy')
-      .expect(404, done);
-    })
-  })
-})
-
-describe('route params', function(){
   methods.forEach(function(method){
     var app = koa();
-
-    app.use(route[method]('/:user(tj)', function*(user, next){
-      yield next;
+    app.use(prefixed[method](function*(){
+      this.body = 'tj';
     }))
 
-    app.use(route[method]('/:user(tj)', function*(user, next){
+    describe('route.' + method + '()', function(){
+      describe('when method and path match', function(){
+        it('should 200', function(done){
+          request(app.listen())
+          [method](prefix)
+          .expect(200)
+          .expect(method === 'head' ? '' : 'tj', done);
+        })
+      })
+
+      describe('when only method matches', function(){
+        it('should 404', function(done){
+          request(app.listen())
+          [method](prefix + '/tjayyyy')
+          .expect(404, done);
+        })
+      })
+
+      describe('when only path matches', function(){
+        it('should 404', function(done){
+          request(app.listen())
+          [method === 'get' ? 'post' : 'get'](prefix)
+          .expect(404, done);
+        })
+      })
+    })
+  })
+});
+
+function setupSuite(route, prefix) {
+  methods.forEach(function(method){
+    var app = koa();
+    app.use(route[method]('/:user(tj)', function*(user){
       this.body = user;
-      yield next;
     }))
 
-    app.use(route[method]('/:user(tj)', function*(user, next){
-      this.status = 201;
-    }))
+    describe('route.' + method + '()', function(){
+      describe('when method and path match', function(){
+        it('should 200', function(done){
+          request(app.listen())
+          [method](prefix + '/tj')
+          .expect(200)
+          .expect(method === 'head' ? '' : 'tj', done);
+        })
+      })
 
-    it('should work with method ' + method, function(done){
-      request(app.listen())
-        [method]('/tj')
-        .expect(201)
-        .expect(method === 'head' ? '' : 'tj', done);
+      describe('when only method matches', function(){
+        it('should 404', function(done){
+          request(app.listen())
+          [method](prefix + '/tjayyyy')
+          .expect(404, done);
+        })
+      })
+
+      describe('when only path matches', function(){
+        it('should 404', function(done){
+          request(app.listen())
+          [method === 'get' ? 'post' : 'get'](prefix + '/tj')
+          .expect(404, done);
+        })
+      })
     })
   })
 
-  it('should work with method head when get is defined', function(done){
-    var app = koa();
+  describe('route.all()', function(){
+    describe('should work with', function(){
+      methods.forEach(function(method){
+        var app = koa();
+        app.use(route.all('/:user(tj)', function*(user){
+          this.body = user;
+        }))
 
-    app.use(route.get('/tj', function *(name){
-      this.body = 'foo';
-    }));
+        it(method, function(done){
+          request(app.listen())
+          [method](prefix + '/tj')
+          .expect(200)
+          .expect(method === 'head' ? '' : 'tj', done);
+        })
+      })
+    })
 
-    request(app.listen())
-    ['head']('/tj')
-    .expect(200, done)
+    describe('when patch does not match', function(){
+      it('should 404', function (done){
+        var app = koa();
+        app.use(route.all('/:user(tj)', function*(user){
+          this.body = user;
+        }))
+
+        request(app.listen())
+        .get(prefix + '/tjayyyyyy')
+        .expect(404, done);
+      })
+    })
   })
 
-  it('should be decoded', function(done){
-    var app = koa();
+  describe('route params', function(){
+    methods.forEach(function(method){
+      var app = koa();
 
-    app.use(route.get('/package/:name', function *(name){
-      name.should.equal('http://github.com/component/tip');
-      done();
-    }));
+      app.use(route[method]('/:user(tj)', function*(user, next){
+        yield next;
+      }))
 
-    request(app.listen())
-    .get('/package/' + encodeURIComponent('http://github.com/component/tip'))
-    .end(function(){});
-  })
+      app.use(route[method]('/:user(tj)', function*(user, next){
+        this.body = user;
+        yield next;
+      }))
 
-  it('should be null if not matched', function(done){
-    var app = koa();
+      app.use(route[method]('/:user(tj)', function*(user, next){
+        this.status = 201;
+      }))
 
-    app.use(route.get('/api/:resource/:id?', function *(resource, id){
-      resource.should.equal('users');
-      (id == null).should.be.true;
-      done();
-    }));
+      it('should work with method ' + method, function(done){
+        request(app.listen())
+          [method](prefix + '/tj')
+          .expect(201)
+          .expect(method === 'head' ? '' : 'tj', done);
+      })
+    })
 
-    request(app.listen())
-    .get('/api/users')
-    .end(function(){});
-  })
+    it('should work with method head when get is defined', function(done){
+      var app = koa();
 
-  it('should use the given options', function(done){
-    var app = koa();
+      app.use(route.get('/tj', function *(name){
+        this.body = 'foo';
+      }));
 
-    app.use(route.get('/api/:resource/:id', function *(resource, id){
-      resource.should.equal('users');
-      id.should.equal('1')
-      done();
-    }, { end: false }));
+      request(app.listen())
+      ['head'](prefix + '/tj')
+      .expect(200, done)
+    })
 
-    request(app.listen())
-      .get('/api/users/1/posts')
+    it('should be decoded', function(done){
+      var app = koa();
+
+      app.use(route.get('/package/:name', function *(name){
+        name.should.equal('http://github.com/component/tip');
+        done();
+      }));
+
+      request(app.listen())
+      .get(prefix + '/package/' + encodeURIComponent('http://github.com/component/tip'))
       .end(function(){});
+    })
+
+    it('should be null if not matched', function(done){
+      var app = koa();
+
+      app.use(route.get('/api/:resource/:id?', function *(resource, id){
+        resource.should.equal('users');
+        (id == null).should.be.true;
+        done();
+      }));
+
+      request(app.listen())
+      .get(prefix + '/api/users')
+      .end(function(){});
+    })
+
+    it('should use the given options', function(done){
+      var app = koa();
+
+      app.use(route.get('/api/:resource/:id', function *(resource, id){
+        resource.should.equal('users');
+        id.should.equal('1')
+        done();
+      }, { end: false }));
+
+      request(app.listen())
+        .get(prefix + '/api/users/1/posts')
+        .end(function(){});
+    })
   })
-})
+}

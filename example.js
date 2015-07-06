@@ -22,8 +22,13 @@ var pets = {
   }
 };
 
-app.use(r.get('/pets', pets.list));
-app.use(r.get('/pets/:name', pets.show));
+/* Create a nested prefix */
+var api = r('/api');
+var pets = api('/pets')
+
+/* Now we listen to the routes /api/pets and /api/pets/:name */
+app.use(pets.get(pets.list));
+app.use(pets.get('/:name', pets.show));
 
 app.listen(3000);
 console.log('listening on port 3000');

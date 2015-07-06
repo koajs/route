@@ -6,19 +6,38 @@ var pathToRegexp = require('path-to-regexp');
 var debug = require('debug')('koa-route');
 var methods = require('methods');
 
-methods.forEach(function(method){
-  exports[method] = create(method);
-});
+module.exports = prefix();
 
-exports.del = exports.delete;
-exports.all = create();
+function prefix(path) {
+  path = path || '';
 
-function create(method) {
+  function prefixed(nestedPath) {
+    return prefix(path + nestedPath);
+  }
+
+  methods.forEach(function(method){
+    prefixed[method] = create(path, method);
+  });
+
+  prefixed.del = prefixed.delete;
+  prefixed.all = create(path);
+
+  return prefixed;
+}
+
+function create(prefix, method) {
   if (method) method = method.toUpperCase();
 
   return function(path, fn, opts){
-    var re = pathToRegexp(path, opts);
-    debug('%s %s -> %s', method || 'ALL', path, re);
+    if(typeof path === 'function') {
+      opts = fn;
+      fn = path;
+      path = '';
+    }
+
+    var fullPath = prefix + path;
+    var re = pathToRegexp(fullPath, opts);
+    debug('%s %s -> %s', method || 'ALL', fullPath, re);
 
     return function *(next){
       var m;
@@ -29,7 +48,7 @@ function create(method) {
       // path
       if (m = re.exec(this.path)) {
         var args = m.slice(1).map(decode);
-        debug('%s %s matches %s %j', this.method, path, this.path, args);
+        debug('%s %s matches %s %j', this.method, fullPath, this.path, args);
         args.push(next);
         yield* fn.apply(this, args);
         return;
