@@ -20,6 +20,10 @@ function create(method) {
     var re = pathToRegexp(path, opts);
     debug('%s %s -> %s', method || 'ALL', path, re);
 
+    if (typeof fn !== 'function') {
+      throw new TypeError('route handler must be function');
+    }
+
     return function *(next){
       var m;
 
