@@ -1,17 +1,17 @@
-var request = require('supertest');
-var koa = require('koa');
+const request = require('supertest');
+const koa = require('koa');
 
-var methods = require('methods').map(function(method){
+const methods = require('methods').map(function(method){
   // normalize method names for tests
   if (method == 'delete') method = 'del';
   if (method == 'connect') return; // WTF
   return method;
 }).filter(Boolean)
 
-var route = require('..');
+const route = require('..');
 
 methods.forEach(function(method){
-  var app = koa();
+  const app = koa();
   app.use(route[method]('/:user(tj)', function*(user){
     this.body = user;
   }))
@@ -47,7 +47,7 @@ methods.forEach(function(method){
 describe('route.all()', function(){
   describe('should work with', function(){
     methods.forEach(function(method){
-      var app = koa();
+      const app = koa();
       app.use(route.all('/:user(tj)', function*(user){
         this.body = user;
       }))
@@ -63,7 +63,7 @@ describe('route.all()', function(){
 
   describe('when patch does not match', function(){
     it('should 404', function (done){
-      var app = koa();
+      const app = koa();
       app.use(route.all('/:user(tj)', function*(user){
         this.body = user;
       }))
@@ -77,7 +77,7 @@ describe('route.all()', function(){
 
 describe('route params', function(){
   methods.forEach(function(method){
-    var app = koa();
+    const app = koa();
 
     app.use(route[method]('/:user(tj)', function*(user, next){
       yield next;
@@ -101,7 +101,7 @@ describe('route params', function(){
   })
 
   it('should work with method head when get is defined', function(done){
-    var app = koa();
+    const app = koa();
 
     app.use(route.get('/tj', function *(name){
       this.body = 'foo';
@@ -113,7 +113,7 @@ describe('route params', function(){
   })
 
   it('should be decoded', function(done){
-    var app = koa();
+    const app = koa();
 
     app.use(route.get('/package/:name', function *(name){
       name.should.equal('http://github.com/component/tip');
@@ -126,7 +126,7 @@ describe('route params', function(){
   })
 
   it('should be null if not matched', function(done){
-    var app = koa();
+    const app = koa();
 
     app.use(route.get('/api/:resource/:id?', function *(resource, id){
       resource.should.equal('users');
@@ -140,7 +140,7 @@ describe('route params', function(){
   })
 
   it('should use the given options', function(done){
-    var app = koa();
+    const app = koa();
 
     app.use(route.get('/api/:resource/:id', function *(resource, id){
       resource.should.equal('users');
