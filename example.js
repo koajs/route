@@ -1,4 +1,6 @@
 
+'use strict';
+
 var r = require('./');
 var koa = require('koa');
 var app = koa();
