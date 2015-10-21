@@ -7,11 +7,11 @@ const debug = require('debug')('koa-route');
 const methods = require('methods');
 
 methods.forEach(function(method){
-  exports[method] = create(method);
+  module.exports[method] = create(method);
 });
 
-exports.del = exports.delete;
-exports.all = create();
+module.exports.del = module.exports.delete;
+module.exports.all = create();
 
 function create(method) {
   if (method) method = method.toUpperCase();
