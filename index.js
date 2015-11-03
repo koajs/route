@@ -24,10 +24,10 @@ function create(method) {
     debug('%s %s -> %s', method || 'ALL', path, re);
 
     return function *(next){
-      const m = re.exec(this.path)
-
       // method
       if (!matches(this, method)) return yield* next;
+
+      const m = re.exec(this.path)
 
       // path
       if (m) {
