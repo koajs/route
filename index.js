@@ -23,23 +23,22 @@ function create(method) {
     const re = pathToRegexp(path, opts);
     debug('%s %s -> %s', method || 'ALL', path, re);
 
-    return function *(next){
-      const m = re.exec(this.path)
-
+    return function (ctx, next){
       // method
-      if (!matches(this, method)) return yield* next;
+      if (!matches(ctx, method)) return next();
 
       // path
+      const m = re.exec(ctx.path);
       if (m) {
         const args = m.slice(1).map(decode);
-        debug('%s %s matches %s %j', this.method, path, this.path, args);
+        debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
+        args.unshift(ctx);
         args.push(next);
-        yield* fn.apply(this, args);
-        return;
+        return Promise.resolve(fn.apply(ctx, args));
       }
 
       // miss
-      return yield* next;
+      return next();
     }
   }
 }
