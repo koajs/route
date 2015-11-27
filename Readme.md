@@ -23,8 +23,8 @@ $ npm install koa-route
 
 ```js
 var _ = require('koa-route');
-var koa = require('koa');
-var app = koa();
+var Koa = require('koa');
+var app = new Koa();
 
 var db = {
   tobi: { name: 'tobi', species: 'ferret' },
@@ -33,15 +33,15 @@ var db = {
 };
 
 var pets = {
-  list: function *(){
+  list: (ctx) => {
     var names = Object.keys(db);
-    this.body = 'pets: ' + names.join(', ');
+    ctx.body = 'pets: ' + names.join(', ');
   },
 
-  show: function *(name){
+  show: (ctx, name) => {
     var pet = db[name];
-    if (!pet) return this.throw('cannot find that pet', 404);
-    this.body = pet.name + ' is a ' + pet.species;
+    if (!pet) return ctx.throw('cannot find that pet', 404);
+    ctx.body = pet.name + ' is a ' + pet.species;
   }
 };
 

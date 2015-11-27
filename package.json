@@ -2,7 +2,7 @@
   "name": "koa-route",
   "description": "Koa route middleware",
   "repository": "koajs/route",
-  "version": "2.4.2",
+  "version": "3.0.0",
   "keywords": [
     "koa",
     "middleware",
@@ -15,7 +15,7 @@
   ],
   "devDependencies": {
     "istanbul-harmony": "0",
-    "koa": "0",
+    "koa": "^2.0.0-alpha.3",
     "mocha": "^2.2.5",
     "should": "*",
     "supertest": "0"
