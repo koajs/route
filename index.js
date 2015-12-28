@@ -24,12 +24,11 @@ function create(method) {
     debug('%s %s -> %s', method || 'ALL', path, re);
 
     return function *(next){
-      const m = re.exec(this.path)
-
       // method
       if (!matches(this, method)) return yield* next;
 
       // path
+      const m = re.exec(this.path);
       if (m) {
         const args = m.slice(1).map(decode);
         debug('%s %s matches %s %j', this.method, path, this.path, args);
