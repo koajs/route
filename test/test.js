@@ -156,3 +156,16 @@ describe('route params', function(){
       .end(function(){});
   })
 })
+
+describe('invalid parameters', function(){
+  it('should throw if handler is not a function', function() {
+    var nonFunction = true;
+    try {
+      route.get('/path', nonFunction);
+    }
+    catch (e) {
+      e.should.be.instanceOf(TypeError)
+    }
+  })
+})
+

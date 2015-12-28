@@ -23,6 +23,10 @@ function create(method) {
     const re = pathToRegexp(path, opts);
     debug('%s %s -> %s', method || 'ALL', path, re);
 
+    if (typeof fn !== 'function') {
+      throw new TypeError('route handler must be function');
+    }
+
     return function *(next){
       // method
       if (!matches(this, method)) return yield* next;
