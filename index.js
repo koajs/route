@@ -23,22 +23,30 @@ function create(method) {
     const re = pathToRegexp(path, opts);
     debug('%s %s -> %s', method || 'ALL', path, re);
 
-    return function (ctx, next){
-      // method
-      if (!matches(ctx, method)) return next();
+    const createRoute = function(routeFunc){
+      return function (ctx, next){
+        // method
+        if (!matches(ctx, method)) return next();
 
-      // path
-      const m = re.exec(ctx.path);
-      if (m) {
-        const args = m.slice(1).map(decode);
-        debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
-        args.unshift(ctx);
-        args.push(next);
-        return Promise.resolve(fn.apply(ctx, args));
+        // path
+        const m = re.exec(ctx.path);
+        if (m) {
+          const args = m.slice(1).map(decode);
+          debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
+          args.unshift(ctx);
+          args.push(next);
+          return Promise.resolve(routeFunc.apply(ctx, args));
+        }
+
+        // miss
+        return next();
       }
+    };
 
-      // miss
-      return next();
+    if (fn) {
+      return createRoute(fn);
+    } else {
+      return createRoute;
     }
   }
 }
