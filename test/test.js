@@ -47,6 +47,41 @@ methods.forEach(function(method){
   })
 })
 
+methods.forEach(function(method){
+  const app = new Koa();
+  app.use(route[method]('/:user(tj)')(function(ctx, user){
+    ctx.body = user;
+  }))
+
+  describe('composed: route.' + method + '()', function(){
+    describe('when method and path match', function(){
+      it('should 200', function(done){
+        request(app.listen())
+        [method]('/tj')
+        .expect(200)
+        .expect(method === 'head' ? '' : 'tj', done);
+      })
+    })
+
+    describe('composed: when only method matches', function(){
+      it('should 404', function(done){
+        request(app.listen())
+        [method]('/tjayyyy')
+        .expect(404, done);
+      })
+    })
+
+    describe('composed: when only path matches', function(){
+      it('should 404', function(done){
+        request(app.listen())
+        [method === 'get' ? 'post' : 'get']('/tj')
+        .expect(404, done);
+      })
+    })
+  })
+})
+
+
 describe('route.all()', function(){
   describe('should work with', function(){
     methods.forEach(function(method){
