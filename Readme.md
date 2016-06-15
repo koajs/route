@@ -14,7 +14,7 @@ app.use(_.get('/pets/:name', pets.show));
 ## Installation
 
 ```js
-$ npm install koa-route
+$ npm install koa-route@next
 ```
 
 ## Example
