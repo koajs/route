@@ -32,6 +32,7 @@ function create(method) {
         const m = re.exec(ctx.path);
         if (m) {
           const args = m.slice(1).map(decode);
+          ctx.routePath = path;
           debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
           args.unshift(ctx);
           args.push(next);

@@ -191,3 +191,18 @@ describe('route params', function(){
       .end(function(){});
   })
 })
+
+describe('routePath is added to ctx', function(){
+  it('when route match', function(done){
+    const app = new Koa();
+
+    app.use(route.get('/tj/:var', function (ctx, name){
+      ctx.routePath.should.equal('/tj/:var');
+      done();
+    }));
+
+    request(app.listen())
+      .get('/tj/val')
+      .end(function(){});
+  })
+})
