@@ -3,7 +3,7 @@
  Uber simple route middleware for koa.
 
 ```js
-var _ = require('koa-route');
+const _ = require('koa-route');
 app.use(_.get('/pets', pets.list));
 app.use(_.get('/pets/:name', pets.show));
 ```
@@ -14,7 +14,7 @@ app.use(_.get('/pets/:name', pets.show));
 ## Installation
 
 ```js
-$ npm install koa-route@next
+$ npm install koa-route
 ```
 
 ## Example
@@ -22,24 +22,24 @@ $ npm install koa-route@next
   Contrived resource-oriented example:
 
 ```js
-var _ = require('koa-route');
-var Koa = require('koa');
-var app = new Koa();
+const _ = require('koa-route');
+const Koa = require('koa');
+const app = new Koa();
 
-var db = {
+const db = {
   tobi: { name: 'tobi', species: 'ferret' },
   loki: { name: 'loki', species: 'ferret' },
   jane: { name: 'jane', species: 'ferret' }
 };
 
-var pets = {
+const pets = {
   list: (ctx) => {
-    var names = Object.keys(db);
+    const names = Object.keys(db);
     ctx.body = 'pets: ' + names.join(', ');
   },
 
   show: (ctx, name) => {
-    var pet = db[name];
+    const pet = db[name];
     if (!pet) return ctx.throw('cannot find that pet', 404);
     ctx.body = pet.name + ' is a ' + pet.species;
   }
