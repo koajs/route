@@ -3,9 +3,10 @@
  Uber simple route middleware for koa.
 
 ```js
-const _ = require('koa-route');
-app.use(_.get('/pets', pets.list));
-app.use(_.get('/pets/:name', pets.show));
+const { get } = require(`koa-route`);
+app
+  .use(get(`/pets`, pets.list))
+  .use(get(`/pets/:name`, pets.show));
 ```
 
  If you need a full-featured solution check out [koa-router](https://github.com/alexmingoia/koa-router),
@@ -13,8 +14,8 @@ app.use(_.get('/pets/:name', pets.show));
 
 ## Installation
 
-```js
-$ npm install koa-route
+```bash
+$ npm install koa-route # or "yarn add koa-route"
 ```
 
 ## Example
@@ -22,34 +23,33 @@ $ npm install koa-route
   Contrived resource-oriented example:
 
 ```js
-const _ = require('koa-route');
-const Koa = require('koa');
-const app = new Koa();
+const { get } = require(`koa-route`);
+const app = new (require(`koa`))();
 
 const db = {
-  tobi: { name: 'tobi', species: 'ferret' },
-  loki: { name: 'loki', species: 'ferret' },
-  jane: { name: 'jane', species: 'ferret' }
+  tobi: { name: `tobi`, species: `ferret` },
+  loki: { name: `loki`, species: `ferret` },
+  jane: { name: `jane`, species: `ferret` },
 };
 
 const pets = {
-  list: (ctx) => {
+  list: ctx => {
     const names = Object.keys(db);
-    ctx.body = 'pets: ' + names.join(', ');
+    ctx.body = `pets: ${names.join(`, `)}`;
   },
 
   show: (ctx, name) => {
     const pet = db[name];
-    if (!pet) return ctx.throw('cannot find that pet', 404);
-    ctx.body = pet.name + ' is a ' + pet.species;
-  }
+    if (!pet) return ctx.throw(`cannot find that pet`, 404);
+    ctx.body = `${pet.name} is a ${pet.species}`;
+  },
 };
 
-app.use(_.get('/pets', pets.list));
-app.use(_.get('/pets/:name', pets.show));
-
-app.listen(3000);
-console.log('listening on port 3000');
+app
+  .use(get(`/pets`, pets.list))
+  .use(get(`/pets/:name`, pets.show))
+  .listen(3000);
+console.log(`listening on port 3000`);
 ```
 
 ## License
