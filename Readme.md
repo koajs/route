@@ -3,9 +3,11 @@
  Uber simple route middleware for koa.
 
 ```js
-const _ = require('koa-route');
-app.use(_.get('/pets', pets.list));
-app.use(_.get('/pets/:name', pets.show));
+const { get } = require('koa-route');
+
+app
+  .use(get('/pets', pets.list))
+  .use(get('/pets/:name', pets.show));
 ```
 
  If you need a full-featured solution check out [koa-router](https://github.com/alexmingoia/koa-router),
@@ -22,18 +24,18 @@ $ npm install koa-route
   Contrived resource-oriented example:
 
 ```js
-const _ = require('koa-route');
+const { get } = require('koa-route');
 const Koa = require('koa');
 const app = new Koa();
 
 const db = {
   tobi: { name: 'tobi', species: 'ferret' },
   loki: { name: 'loki', species: 'ferret' },
-  jane: { name: 'jane', species: 'ferret' }
+  jane: { name: 'jane', species: 'ferret' },
 };
 
 const pets = {
-  list: (ctx) => {
+  list: ctx => {
     const names = Object.keys(db);
     ctx.body = 'pets: ' + names.join(', ');
   },
@@ -45,10 +47,11 @@ const pets = {
   }
 };
 
-app.use(_.get('/pets', pets.list));
-app.use(_.get('/pets/:name', pets.show));
+app
+  .use(get('/pets', pets.list))
+  .use(get('/pets/:name', pets.show))
+  .listen(3000);
 
-app.listen(3000);
 console.log('listening on port 3000');
 ```
 
