@@ -36,7 +36,7 @@ function create(method) {
             args = m.slice(1).map(decode);
           } catch (e) {
             if (e instanceof URIError) {
-              return next();
+              ctx.throw(400);
             }
             throw e;
           }
