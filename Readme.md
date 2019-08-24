@@ -8,7 +8,7 @@ app.use(_.get('/pets', pets.list));
 app.use(_.get('/pets/:name', pets.show));
 ```
 
- If you need a full-featured solution check out [koa-router](https://github.com/alexmingoia/koa-router),
+ If you need a full-featured solution check out [koa-router](https://github.com/koajs/router),
  a Koa clone of express-resource.
 
 ## Installation
