@@ -31,7 +31,15 @@ function create(method) {
         // path
         const m = re.exec(ctx.path);
         if (m) {
-          const args = m.slice(1).map(decode);
+          let args;
+          try {
+            args = m.slice(1).map(decode);
+          } catch (e) {
+            if (e instanceof URIError) {
+              ctx.throw(400);
+            }
+            throw e;
+          }
           ctx.routePath = path;
           debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
           args.unshift(ctx);
