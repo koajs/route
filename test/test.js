@@ -3,6 +3,7 @@
 
 const request = require('supertest');
 const Koa = require('koa');
+const should = require('should');
 
 const methods = require('methods').map(function(method){
   // normalize method names for tests
@@ -203,6 +204,37 @@ describe('routePath is added to ctx', function(){
 
     request(app.listen())
       .get('/tj/val')
+      .end(function(){});
+  })
+})
+
+describe('path sanitization', function(){
+  context('when path is not a string', function() {
+    it('should throw "invalid path" error', function(){
+      const app = new Koa();
+
+      should(function () {
+        route.get(null, function (ctx, name) {})
+      })
+      .throw('invalid path');
+
+      should(function () {
+        route.get(undefined, function (ctx, name) {})
+      })
+      .throw('invalid path');
+    })
+  })
+
+  it('should squash multiple consequtive backslashes', function(done){
+    const app = new Koa();
+
+    app.use(route.get('//tj///:var', function (ctx, name){
+      ctx.routePath.should.equal('/tj/:var');
+      done();
+    }));
+
+    request(app.listen())
+      .get('//tj/val')
       .end(function(){});
   })
 })
