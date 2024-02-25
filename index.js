@@ -16,10 +16,23 @@ methods.forEach(function(method){
 module.exports.del = module.exports.delete;
 module.exports.all = create();
 
+function squeezeBackslashes(str){
+  return str.replace(/(\/{2,})/g, '/');
+}
+
+function sanitizePath(path){
+  if (typeof path !== 'string') {
+    throw new Error('invalid path');
+  }
+  return squeezeBackslashes(path);
+}
+
 function create(method) {
   if (method) method = method.toUpperCase();
 
   return function(path, fn, opts){
+    path = sanitizePath(path);
+
     const re = pathToRegexp(path, opts);
     debug('%s %s -> %s', method || 'ALL', path, re);
 
@@ -29,7 +42,7 @@ function create(method) {
         if (!matches(ctx, method)) return next();
 
         // path
-        const m = re.exec(ctx.path);
+        const m = re.exec(sanitizePath(ctx.path));
         if (m) {
           const args = m.slice(1).map(decode);
           ctx.routePath = path;
